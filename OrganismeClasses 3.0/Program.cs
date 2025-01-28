@@ -4,12 +4,7 @@ namespace OrganismClasses
 {
     public class Program
     {
-        string dbPath = Path.Combine(FileSystem.AppDataDirectory, "OrganismenDB.db3");
-        builder.Services
-
-        //Adding some default organisms to the list
-        static public int MyProperty { get; set; }
-
+       
         static Animal Vos = new Animal("Vos", Organism.Origins.Native, "Forest");
         static Animal Fret = new Animal("Egel", Organism.Origins.Foreign, "Plains");
         static Animal Bionder = new Animal("Bionder", Organism.Origins.Foreign, "Shed");
