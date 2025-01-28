@@ -1,13 +1,18 @@
-﻿namespace OrganismClasses
+﻿using SQLite;
+
+namespace OrganismClasses
 {
-    internal class Program
+    public class Program
     {
+        string dbPath = Path.Combine(FileSystem.AppDataDirectory, "OrganismenDB.db3");
+        builder.Services
+
         //Adding some default organisms to the list
         static public int MyProperty { get; set; }
 
-        static Animal Vos = new Animal("Vos", Organism.Origins.Native, Animal.Habitats.Forest);
-        static Animal Fret = new Animal("Egel", Organism.Origins.Foreign, Animal.Habitats.Plains);
-        static Animal Bionder = new Animal("Bionder", Organism.Origins.Foreign, Animal.Habitats.Shed);
+        static Animal Vos = new Animal("Vos", Organism.Origins.Native, "Forest");
+        static Animal Fret = new Animal("Egel", Organism.Origins.Foreign, "Plains");
+        static Animal Bionder = new Animal("Bionder", Organism.Origins.Foreign, "Shed");
 
         static Plant Fern = new Plant("Fern", Organism.Origins.Native, 0.90);
         static Plant Eendenkroes = new Plant("Eendenkroes", Organism.Origins.Native, 0.005);

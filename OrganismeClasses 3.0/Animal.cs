@@ -1,25 +1,25 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace OrganismClasses
 {
-    internal class Animal : Organism
+    [Table("Animal")]
+    public class Animal : Organism
     {
-        internal enum Habitats
-        {
-            Forest,
-            Plains,
-            Pond,
-            Shed
-        }
+        [PrimaryKey, AutoIncrement]
+        [Column("Id")]
+        public int Id { get; set; }
 
         //habitat = Leefgebied
-        public Habitats Habitat { get; set; } = Habitats.Forest;
+        [Column("Habitat")]
+        public string Habitat { get; set; } = "DefaultHabitat";
 
-        public Animal(string name, Origins origin, Habitats habitat)
+        public Animal(string name, Origins origin, string habitat)
         {
             Name = name;
             Origin = origin;

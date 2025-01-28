@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +8,14 @@ using static OrganismClasses.Animal;
 
 namespace OrganismClasses
 {
-    internal class Plant : Organism
+    [Table("Plant")]
+    public class Plant : Organism
     {
+        [PrimaryKey, AutoIncrement]
+        [Column("Id")]
+        public int Id { get; set; }
+
+        [Column("HeightInMeters")]
         public double HeightInMeters { get; set; } = 9.999;
 
         public Plant(string name, Origins origin, double heightinmeters)
