@@ -31,11 +31,13 @@ namespace OrganismClasses
                 "MADE BY THE ANIMATES\n" +
                 "======================\n");
 
-            MainOptionsMenu();
-
-            Plant plant = new Plant("Brandnetel", Organism.Origins.Native, 0.25);
+            Plant plant = new Plant("Eikenhoutenkiemplantje", Organism.Origins.Native, 0.25);
             DAL dal = new DAL();
             dal.addPlant(plant);
+
+            MainOptionsMenu();
+
+            
 
         }
 
