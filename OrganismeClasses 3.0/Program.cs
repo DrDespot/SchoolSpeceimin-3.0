@@ -4,7 +4,7 @@ namespace OrganismClasses
 {
     public class Program
     {
-       
+
         static Animal Vos = new Animal("Vos", Organism.Origins.Native, "Forest");
         static Animal Fret = new Animal("Egel", Organism.Origins.Foreign, "Plains");
         static Animal Bionder = new Animal("Bionder", Organism.Origins.Foreign, "Shed");
@@ -32,6 +32,11 @@ namespace OrganismClasses
                 "======================\n");
 
             MainOptionsMenu();
+
+            Plant plant = new Plant("Brandnetel", Organism.Origins.Native, 0.25);
+            DAL dal = new DAL();
+            dal.addPlant(plant);
+
         }
 
         static void MainOptionsMenu()
@@ -94,7 +99,7 @@ namespace OrganismClasses
             int answer = 0;
             Console.WriteLine("\nADDING ORGANISM:");
             answer = AskClosedQuestion("Organism type?\n1. Animal \n2. Plant");
-            
+
             if (answer == 1)
             {
                 Console.WriteLine();
@@ -104,16 +109,16 @@ namespace OrganismClasses
             {
                 AddPlant();
             }
-            
-            
+
+
         }
 
         static void AddAnimal()
         {
-           
+
             string Name = "";
             int Origin = 0;
-            
+
             bool validName = false;
             while (!validName)
             {
@@ -191,7 +196,7 @@ namespace OrganismClasses
             string input = "";
             do
             {
-                Console.Write(Question); 
+                Console.Write(Question);
                 input = Console.ReadLine();
 
                 if (string.IsNullOrWhiteSpace(input))
@@ -226,11 +231,11 @@ namespace OrganismClasses
                 {
                     Console.WriteLine(plant.DryDescription());
                 }
-                    
+
             }
             Console.WriteLine("\n");
 
-            MainOptionsMenu(); 
+            MainOptionsMenu();
         }
 
 
@@ -276,7 +281,7 @@ namespace OrganismClasses
                     break;
 
                 case 2:
-                    Console.WriteLine("PLANTS ONLY FILTER"); 
+                    Console.WriteLine("PLANTS ONLY FILTER");
                     var plants = AllOrganisms.OfType<Plant>();
 
                     foreach (var plant in plants)
@@ -286,7 +291,7 @@ namespace OrganismClasses
                     break;
 
                 case 3:
-                    Console.WriteLine("NATIVE ONLY FILTER"); 
+                    Console.WriteLine("NATIVE ONLY FILTER");
                     var nativeOrganisms = AllOrganisms.Where(o => o.Origin == Organism.Origins.Native).ToList();
 
                     foreach (var organism in nativeOrganisms)
@@ -329,11 +334,12 @@ namespace OrganismClasses
             if (int.TryParse(input, out result) && result == 1)
             {
                 Environment.Exit(0);
-            } else
+            }
+            else
             {
                 MainOptionsMenu();
             }
-               
+
         }
 
         static void Bjorn()
