@@ -4,6 +4,7 @@ using Microsoft.Data.Sqlite;
 internal class DAL
 {
     private readonly string _connectionString = @"Data Source=/home/user123/DBExoten/OrganismenDB.db;";
+    //private readonly string _connectionString = @"Data Source=/C:/Users/marin/Documents/ZUYD/YEAR1/BLOK 2/Software engineering/Huiswerk/OrganismenDB.db";
     public DAL()
     {
         InitializeDatabase();
@@ -25,7 +26,7 @@ internal class DAL
         ;
 
         using var command = new SqliteCommand(insertQuery, connection);
-        command.Parameters.AddWithValue("@Naam", newPlant.Id);
+        command.Parameters.AddWithValue("@id", newPlant.Id);
         command.Parameters.AddWithValue("@Name", newPlant.Name);
         command.Parameters.AddWithValue("@Type", newPlant.Type);
         command.Parameters.AddWithValue("@Origin", newPlant.Origin);
