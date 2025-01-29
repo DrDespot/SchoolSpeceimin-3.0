@@ -3,8 +3,11 @@ using Microsoft.Data.Sqlite;
 
 internal class DAL
 {
-    //private readonly string _connectionString = @"Data Source=/home/user123/DBExoten/OrganismenDB.db;";
-    private readonly string _connectionString = @"Data Source=/C:/Users/marin/Documents/ZUYD/YEAR1/BLOK 2/Software engineering/Huiswerk/OrganismenDB.db";
+    //For VM
+    private readonly string _connectionString = @"Data Source=/home/user123/DBExoten/OrganismenDB.db;";
+
+    //For laptop
+    //private readonly string _connectionString = @"Data Source=/C:/Users/marin/Documents/ZUYD/YEAR1/BLOK 2/Software engineering/Huiswerk/OrganismenDB.db";
     public DAL()
     {
         InitializeDatabase();
