@@ -18,7 +18,7 @@ namespace OrganismClasses
         [Column("HeightInMeters")]
         public double HeightInMeters { get; set; } = 9.999;
 
-        public Plant(string name, Origins origin, double heightinmeters)
+        public Plant(string name, string origin, double heightinmeters)
         {
             Name = name;
             Origin = origin;
@@ -27,7 +27,7 @@ namespace OrganismClasses
 
         public override string DryDescription()
         {
-            return $"Name: {Name}\tType: Plant\tOrigin: {Origin}\tHeight:{HeightInMeters} m\n";
+            return $"Name: {Name}\n";
         }
     }
 }

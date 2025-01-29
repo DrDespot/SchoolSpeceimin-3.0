@@ -1,27 +1,18 @@
-﻿using SQLite;
+﻿using System.Xml.Linq;
+using Bogus.DataSets;
+using SQLite;
+using static OrganismClasses.Organism;
+
 
 namespace OrganismClasses
 {
     public class Program
     {
 
-        static Animal Vos = new Animal("Vos", Organism.Origins.Native, "Forest");
-        static Animal Fret = new Animal("Egel", Organism.Origins.Foreign, "Plains");
-        static Animal Bionder = new Animal("Bionder", Organism.Origins.Foreign, "Shed");
 
-        static Plant Fern = new Plant("Fern", Organism.Origins.Native, 0.90);
-        static Plant Eendenkroes = new Plant("Eendenkroes", Organism.Origins.Native, 0.005);
-        static Plant Ambrosia = new Plant("Ambrosia", Organism.Origins.Foreign, 4.00);
+        static List<Organism> AllOrganisms = new List<Organism>();
 
-        static List<Organism> AllOrganisms = new List<Organism>
-        {
-            Vos,
-            Fret,
-            Bionder,
-            Fern,
-            Eendenkroes,
-            Ambrosia
-        };
+
 
 
         static void Main(string[] args)
@@ -30,10 +21,6 @@ namespace OrganismClasses
                 "WELCOME TO ORGANISM EDITOR\n" +
                 "MADE BY THE ANIMATES\n" +
                 "======================\n");
-
-            Plant plant = new Plant("Eikenhoutenkiemplantje", Organism.Origins.Native, 0.25);
-            DAL dal = new DAL();
-            dal.addPlant(plant);
 
             MainOptionsMenu();
 
@@ -74,7 +61,15 @@ namespace OrganismClasses
                     break;
 
                 case 2:
-                    ShowOrganismsList(AllOrganisms);
+                    //ShowOrganismsList(AllOrganisms);
+                    DAL dal = new DAL();
+                    List<Organism> organisms = dal.getAllOrganisms();
+                    foreach(Organism org in organisms)
+                    {
+                        Console.WriteLine(org.DryDescription());
+                    }
+                    MainOptionsMenu();
+                    Console.WriteLine("\n");
                     break;
 
                 case 3:
@@ -119,50 +114,94 @@ namespace OrganismClasses
         {
 
             string Name = "";
-            int Origin = 0;
+            string Origin = "";
+            string Habitat = "";
 
-            bool validName = false;
-            while (!validName)
+            Name = AskOpenQuestion("Input plant name: \n");
+
+            int answer = AskClosedQuestion($"Where does the {Name} come from?\n1. Native\n2. Foreign");
+
+            if (answer == 1)
             {
-                //Why wont you automatically create a new line??
-                Name = AskOpenQuestion("Input animal name: \n");
-
-                if (AllOrganisms.Any(o => o.Name.Equals(Name, StringComparison.OrdinalIgnoreCase)))
-                {
-                    Console.WriteLine("That name already exists. Please choose a different name.\n");
-                }
-                else
-                {
-                    validName = true;
-                }
+                Origin = "Native";
+            }
+            else
+            {
+                Origin = "Foreign";
             }
 
-            Origin = AskClosedQuestion($"Where does the {Name} come from?\n1. Native\n2. Foreign");
+            Habitat = AskOpenQuestion("Input animal habitat [ex. pond, forest, plains]: \n");
+
+
+
+            DAL dal = new DAL();
+
+            List<Organism> allOrganisms = dal.getAllOrganisms();
+            // Assuming you have a method to fetch all animals from the database
+            int newId = allOrganisms.Count;
+
+
+            Animal newAnimal = new Animal(newId, Name, Origin, Habitat);
+
+
+
+            dal.addAnimal(newAnimal);
 
         }
 
         static void AddPlant()
         {
             string Name = "";
-            int Origin = 0;
+            string Origin = "";
+            double HeightInMeters = 0;
 
-            bool validName = false;
-            while (!validName)
+            Name = AskOpenQuestion("Input plant name: \n");
+
+
+
+            int answer = AskClosedQuestion($"Where does the {Name} come from?\n1. Native\n2. Foreign");
+
+            if (answer == 1)
             {
-                //Why wont you automatically create a new line??
-                Name = AskOpenQuestion("Input plant name: \n");
+                Origin = "Native";
+            }
+            else
+            {
+                Origin = "Foreign";
+            }
 
-                if (AllOrganisms.Any(o => o.Name.Equals(Name, StringComparison.OrdinalIgnoreCase)))
+            bool validInput = false;
+
+            while (!validInput)
+            {
+                Console.WriteLine("Enter a height in meters:");
+
+                string input = Console.ReadLine();
+
+                if (double.TryParse(input, out HeightInMeters))
                 {
-                    Console.WriteLine("That name already exists. Please choose a different name.\n");
+                    if (HeightInMeters <= 0)
+                    {
+                        Console.WriteLine("Error: Height must be a positive number.");
+                    }
+                    else
+                    {
+                        validInput = true;
+                    }
                 }
                 else
                 {
-                    validName = true;
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
                 }
             }
 
-            Origin = AskClosedQuestion($"Where does the {Name} come from?\n1. Native\n2. Foreign");
+            //Console.WriteLine($"The entered height is: {HeightInMeters} meters");
+
+            Plant newPlant = new Plant(Name, Origin, HeightInMeters);
+
+            DAL dal = new DAL();
+            dal.addPlant(newPlant);
+
         }
 
 
@@ -294,7 +333,7 @@ namespace OrganismClasses
 
                 case 3:
                     Console.WriteLine("NATIVE ONLY FILTER");
-                    var nativeOrganisms = AllOrganisms.Where(o => o.Origin == Organism.Origins.Native).ToList();
+                    var nativeOrganisms = AllOrganisms.Where(o => o.Origin == "Native").ToList();
 
                     foreach (var organism in nativeOrganisms)
                     {
@@ -304,7 +343,7 @@ namespace OrganismClasses
 
                 case 4:
                     Console.WriteLine("FOREIGN ONLY FILTER");
-                    var foreignOrganisms = AllOrganisms.Where(o => o.Origin == Organism.Origins.Foreign).ToList();
+                    var foreignOrganisms = AllOrganisms.Where(o => o.Origin == "Foreign").ToList();
 
                     foreach (var organism in foreignOrganisms)
                     {

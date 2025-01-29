@@ -19,8 +19,9 @@ namespace OrganismClasses
         [Column("Habitat")]
         public string Habitat { get; set; } = "DefaultHabitat";
 
-        public Animal(string name, Origins origin, string habitat)
+        public Animal(int ID, string name, string origin, string habitat)
         {
+            Id = ID;
             Name = name;
             Origin = origin;
             Habitat = habitat;
@@ -28,7 +29,7 @@ namespace OrganismClasses
 
         public override string DryDescription()
         {
-            return $"Name: {Name}\tType: Animal\tOrigin: {Origin}\tHabitat:{Habitat}\n";
+            return $"Name: {Name}\n";
         }
     }
 }

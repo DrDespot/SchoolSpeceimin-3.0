@@ -10,6 +10,7 @@ namespace OrganismClasses
     [Table("Organism")]
     public class Organism
     {
+
         [PrimaryKey, AutoIncrement]
         [Column("Id")]
         public int Id { get; set; }
@@ -20,11 +21,11 @@ namespace OrganismClasses
             Plant
         }
 
-        public enum Origins
+        /*public enum Origins
         {
             Native,
             Foreign
-        }
+        }*/
 
 
         [Column("Name")]
@@ -34,11 +35,12 @@ namespace OrganismClasses
         public Types Type { get; set; } = Types.Animal;
 
         [Column("Origin")]
-        public Origins Origin { get; set; } = Origins.Native;
+        public string Origin { get; set; } = "DefaultOrigin";
 
         public virtual string DryDescription()
         {
-            return $"Name:\t\t{Name}\nType:\t\t{Type}\nOrigin:\t\t{Origin}\n";
+            //miss type eruit laten. Alleen naam.
+            return $"Name:\t\t{Name}";
         }
 
     }
