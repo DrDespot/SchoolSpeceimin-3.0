@@ -24,6 +24,7 @@ public class DatabaseHelper
             {
                 connection.Open();
 
+
                 // Common Cmds: Queries[read], Update[Change row[] of data], Insert [Add new row of data] 
 
                 // Define tables for your data
@@ -62,122 +63,143 @@ public class DatabaseHelper
     public static void AddSampleUsers()
     {
         // Note: Temp solution. U should check if the value already has been added and then choose to not add it again. 
-        if (!File.Exists(dbFullPath))
+       
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
         {
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            connection.Open();
+
+            string checkQuery = "SELECT COUNT(*) FROM users;";
+            using (SQLiteCommand checkCommand = new SQLiteCommand(checkQuery, connection))
             {
-                connection.Open();
-
-                string[] userNames = {
-            "Alan Turing",
-            "Linus Torvalds",
-            "Steve Jobs",
-            "Edsger Dijkstra",
-            "Bill Gates"
-            };
-                int[] userAges = {
-            41,
-            55,
-            56,
-            72,
-            69
-            };
-                string[] userEmails = {
-            "alan.turing@example.com",
-            "linus.torvalds@example.com",
-            "steve.jobs@example.com",
-            "edsger.dijkstra@example.com",
-            "bill.gates@example.com"
-            };
-                string[] userPasswords = {
-            "password1",
-            "password2",
-            "password3",
-            "password4",
-            "password5"
-            };
-                string[] userTypes = {
-            "RegularUser",
-            "PremiumUser",
-            "RegularUser",
-            "RegularUser",
-            "PremiumUser"
-            };
-
-                using (SQLiteCommand command = new SQLiteCommand(connection))
+                long count = (long)checkCommand.ExecuteScalar();
+                if (count > 0)
                 {
-                    for (int i = 0; i < userNames.Length; i++)
-                    {
-                        //The @'s are placeholders for the real values.
-                        command.CommandText =
-                            @"INSERT INTO users (name, age, email, password, user_type)
-                        VALUES (@name, @age, @email, @password, @user_type);";
+                    Console.WriteLine("User data already exists. Skipping sample insertion.");
+                    return; // Exit the function if data exists
+                }
+            }
 
-                        // Imporrtant to safely add parameters this way to avoid 
-                        // SQL injections.
-                        command.Parameters.AddWithValue("@name", userNames[i]);
-                        command.Parameters.AddWithValue("@email", userEmails[i]);
-                        command.Parameters.AddWithValue("@age", userAges[i]);
-                        command.Parameters.AddWithValue("@password", userPasswords[i]);
-                        command.Parameters.AddWithValue("@user_type", userTypes[i]);
-                        command.ExecuteNonQuery();
+            string[] userNames = {
+        "Alan Turing",
+        "Linus Torvalds",
+        "Steve Jobs",
+        "Edsger Dijkstra",
+        "Bill Gates"
+        };
+            int[] userAges = {
+        41,
+        55,
+        56,
+        72,
+        69
+        };
+            string[] userEmails = {
+        "alan.turing@example.com",
+        "linus.torvalds@example.com",
+        "steve.jobs@example.com",
+        "edsger.dijkstra@example.com",
+        "bill.gates@example.com"
+        };
+            string[] userPasswords = {
+        "password1",
+        "password2",
+        "password3",
+        "password4",
+        "password5"
+        };
+            string[] userTypes = {
+        "RegularUser",
+        "PremiumUser",
+        "RegularUser",
+        "RegularUser",
+        "PremiumUser"
+        };
 
-                        //Cleaning up parameters for the next iteration of the loop.
-                        command.Parameters.Clear();
-                    }
+            using (SQLiteCommand command = new SQLiteCommand(connection))
+            {
+                for (int i = 0; i < userNames.Length; i++)
+                {
+                    //The @'s are placeholders for the real values.
+                    command.CommandText =
+                        @"INSERT INTO users (name, age, email, password, user_type)
+                    VALUES (@name, @age, @email, @password, @user_type);";
+
+                    // Imporrtant to safely add parameters this way to avoid 
+                    // SQL injections.
+                    command.Parameters.AddWithValue("@name", userNames[i]);
+                    command.Parameters.AddWithValue("@email", userEmails[i]);
+                    command.Parameters.AddWithValue("@age", userAges[i]);
+                    command.Parameters.AddWithValue("@password", userPasswords[i]);
+                    command.Parameters.AddWithValue("@user_type", userTypes[i]);
+                    command.ExecuteNonQuery();
+
+                    //Cleaning up parameters for the next iteration of the loop.
+                    command.Parameters.Clear();
                 }
             }
         }
+        
     }
             
 
     public static void AddSampleBooks()
     {
-        if (!File.Exists(dbFullPath))
+        
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
         {
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            connection.Open();
+
+            string checkQuery = "SELECT COUNT(*) FROM books;";
+            using (SQLiteCommand checkCommand = new SQLiteCommand(checkQuery, connection))
             {
-                connection.Open();
-
-                string[] bookTitles = {
-            "All My Sons",
-            "Oliver Twist",
-            "Das Parfum",
-            };
-                string[] bookAuthors = {
-            "Arthur Miller",
-            "Charles Dickens",
-            "Patrick Süskind"
-            };
-                string[] bookGenres = {
-            "Tragedy",
-            "Roman",
-            "Horror"
-            };
-
-                using (SQLiteCommand command = new SQLiteCommand(connection))
+                long count = (long)checkCommand.ExecuteScalar();
+                if (count > 0)
                 {
-                    for (int i = 0; i < bookTitles.Length; i++)
-                    {
-                        //The @'s are placeholders for the real values.
-                        command.CommandText =
-                            @"INSERT INTO books (title, author, genre)
-                        VALUES (@title, @author, @genre);";
+                    Console.WriteLine("Book data already exists. Skipping sample insertion.");
+                    return; // Exit the function if data exists
+                }
+            }
 
-                        // Imporrtant to safely add parameters this way to avoid 
-                        // SQL injections.
-                        command.Parameters.AddWithValue("@title", bookTitles[i]);
-                        command.Parameters.AddWithValue("@author", bookAuthors[i]);
-                        command.Parameters.AddWithValue("@genre", bookGenres[i]);
+            string[] bookTitles = {
+        "All My Sons",
+        "Oliver Twist",
+        "Das Parfum",
+        };
+            string[] bookAuthors = {
+        "Arthur Miller",
+        "Charles Dickens",
+        "Patrick Süskind"
+        };
+            string[] bookGenres = {
+        "Tragedy",
+        "Roman",
+        "Horror"
+        };
 
-                        command.ExecuteNonQuery();
+            using (SQLiteCommand command = new SQLiteCommand(connection))
+            {
+                for (int i = 0; i < bookTitles.Length; i++)
+                {
+                    //The @'s are placeholders for the real values.
+                    command.CommandText =
+                        @"INSERT INTO books (title, author, genre)
+                    VALUES (@title, @author, @genre);";
 
-                        //Cleaning up parameters for the next iteration of the loop.
-                        command.Parameters.Clear();
-                    }
+                    // Imporrtant to safely add parameters this way to avoid 
+                    // SQL injections.
+                    command.Parameters.AddWithValue("@title", bookTitles[i]);
+                    command.Parameters.AddWithValue("@author", bookAuthors[i]);
+                    command.Parameters.AddWithValue("@genre", bookGenres[i]);
+
+                    command.ExecuteNonQuery();
+
+                    //Cleaning up parameters for the next iteration of the loop.
+                    command.Parameters.Clear();
                 }
             }
         }
+        
            
     }
 
