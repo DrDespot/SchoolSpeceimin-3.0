@@ -2,6 +2,7 @@
 //using Microsoft.Data.Sqlite;
 using System.IO;
 using System.Text;
+using System.Xml.Linq;
 using DataBaseAttachingTest.Models;  
 
 public class DatabaseHelper
@@ -28,15 +29,18 @@ public class DatabaseHelper
                 // Common Cmds: Queries[read], Update[Change row[] of data], Insert [Add new row of data] 
 
                 // Define tables for your data
-                string createBooksTableQuery = @"
-                    CREATE TABLE IF NOT EXISTS books (
+                string createAnimalsTableQuery = @"
+                    CREATE TABLE IF NOT EXISTS animals (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        title TEXT NOT NULL,
-                        author TEXT NOT NULL,
-                        genre TEXT NOT NULL
+                        name TEXT NOT NULL,
+                        description TEXT NOT NULL,
+                        geolocation TEXT NOT NULL,
+                        date TEXT NOT NULL,
+                        time TEXT NOT NULL
+
                     );";
 
-                string createUsersTableQuery = @"
+                /*string createUsersTableQuery = @"
                     CREATE TABLE IF NOT EXISTS users (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         name TEXT NOT NULL,
@@ -45,21 +49,99 @@ public class DatabaseHelper
                         password TEXT NOT NULL,
                         user_type TEXT NOT NULL
                     );";
+                */
 
                 // Add the defined tables.
                 using (SQLiteCommand command = new SQLiteCommand(connection))
                 {
-                    command.CommandText = createBooksTableQuery;
+                    command.CommandText = createAnimalsTableQuery;
                     command.ExecuteNonQuery();
 
-                    command.CommandText = createUsersTableQuery;
+                    /*command.CommandText = createUsersTableQuery;
                     command.ExecuteNonQuery();
+                    */
                 }
             }
         }
 
     }
 
+
+
+    public static void AddSampleBooks()
+    {
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            string checkQuery = "SELECT COUNT(*) FROM animals;";
+            using (SQLiteCommand checkCommand = new SQLiteCommand(checkQuery, connection))
+            {
+                long count = (long)checkCommand.ExecuteScalar();
+                if (count > 0)
+                {
+                    Console.WriteLine("Animal data already exists. Skipping sample insertion.");
+                    return; // Exit the function if data exists
+                }
+            }
+
+            string[] animalNames = {
+            "All My Sons",
+            "Oliver Twist",
+            "Das Parfum",
+            };
+                string[] animalDescriptions = {
+            "Arthur Miller",
+            "Charles Dickens",
+            "Patrick Süskind"
+            };
+                string[] animalGeolocations = {
+            "Tragedy",
+            "Roman",
+            "Horror"
+            };
+            string[] animalDates = {
+            "Tragedy",
+            "Roman",
+            "Horror"
+            };
+            string[] animalTimes = {
+            "Tragedy",
+            "Roman",
+            "Horror"
+            };
+
+
+            using (SQLiteCommand command = new SQLiteCommand(connection))
+            {
+                for (int i = 0; i < animalNames.Length; i++)
+                {
+                    //The @'s are placeholders for the real values.
+                    command.CommandText =
+                        @"INSERT INTO animals (name, description, geolocation, date, time)
+                    VALUES (@name, @description, @geolocation, @date, @time);";
+
+                    // Imporrtant to safely add parameters this way to avoid 
+                    // SQL injections.
+                    command.Parameters.AddWithValue("@name", animalNames[i]);
+                    command.Parameters.AddWithValue("@description", animalDescriptions[i]);
+                    command.Parameters.AddWithValue("@geolocation", animalGeolocations[i]);
+                    command.Parameters.AddWithValue("@date", animalDates[i]);
+                    command.Parameters.AddWithValue("@time", animalTimes[i]);
+
+                    command.ExecuteNonQuery();
+
+                    //Cleaning up parameters for the next iteration of the loop.
+                    command.Parameters.Clear();
+                }
+            }
+        }
+
+
+    }
+
+    /*
     public static void AddSampleUsers()
     {
         // Note: Temp solution. U should check if the value already has been added and then choose to not add it again. 
@@ -141,86 +223,28 @@ public class DatabaseHelper
         }
         
     }
-            
+    */
 
-    public static void AddSampleBooks()
+
+    
+    public List<Animal> GetAllBooks()
     {
-        
-        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
-        {
-            connection.Open();
-
-            string checkQuery = "SELECT COUNT(*) FROM books;";
-            using (SQLiteCommand checkCommand = new SQLiteCommand(checkQuery, connection))
-            {
-                long count = (long)checkCommand.ExecuteScalar();
-                if (count > 0)
-                {
-                    Console.WriteLine("Book data already exists. Skipping sample insertion.");
-                    return; // Exit the function if data exists
-                }
-            }
-
-            string[] bookTitles = {
-        "All My Sons",
-        "Oliver Twist",
-        "Das Parfum",
-        };
-            string[] bookAuthors = {
-        "Arthur Miller",
-        "Charles Dickens",
-        "Patrick Süskind"
-        };
-            string[] bookGenres = {
-        "Tragedy",
-        "Roman",
-        "Horror"
-        };
-
-            using (SQLiteCommand command = new SQLiteCommand(connection))
-            {
-                for (int i = 0; i < bookTitles.Length; i++)
-                {
-                    //The @'s are placeholders for the real values.
-                    command.CommandText =
-                        @"INSERT INTO books (title, author, genre)
-                    VALUES (@title, @author, @genre);";
-
-                    // Imporrtant to safely add parameters this way to avoid 
-                    // SQL injections.
-                    command.Parameters.AddWithValue("@title", bookTitles[i]);
-                    command.Parameters.AddWithValue("@author", bookAuthors[i]);
-                    command.Parameters.AddWithValue("@genre", bookGenres[i]);
-
-                    command.ExecuteNonQuery();
-
-                    //Cleaning up parameters for the next iteration of the loop.
-                    command.Parameters.Clear();
-                }
-            }
-        }
-        
-           
-    }
-
-
-    public List<Book> GetAllBooks()
-    {
+        /*
         using (StreamWriter sw = new StreamWriter("test.csv"))
         {
             sw.WriteLine("a,b,c");
         }
+        */
 
-        var Books = new List<Book>();
+        var Animals = new List<Animal>();
 
         using (SQLiteConnection connection = new SQLiteConnection(connectionString))
         {
             connection.Open();
 
             string selectQuery = @"
-            SELECT * FROM books;";
+            SELECT * FROM animals;";
             using var command = new SQLiteCommand(selectQuery, connection);
-
 
             using var reader = command.ExecuteReader();
             while (reader.Read())
@@ -228,29 +252,34 @@ public class DatabaseHelper
                 int idValue = reader.GetInt32(0);
                 string id = idValue.ToString();
 
-                string title = reader.GetString(1);
-                string author = reader.GetString(2);
-                string genre = reader.GetString(3);
+                string name = reader.GetString(1);
+                string description = reader.GetString(2);
+                string geolocation = reader.GetString(3);
+                string date = reader.GetString(4);
+                string time = reader.GetString(5);
 
-                Books.Add(new Book
+                Animals.Add(new Animal
                 (
                     idValue,
-                    title,
-                    author,
-                    genre
+                    name,
+                    description,
+                    geolocation,
+                    date,
+                    time
                 ));
             }
 
 
-            foreach (var val in Books)
+            foreach (var val in Animals)
             {
-                Console.WriteLine($"ID: {val.Id},\tTitle: {val.Title},\tAuthor: {val.Author},\tGenre: {val.Genre}");
+                Console.WriteLine($"ID: {val.Id},\tName: {val.Name},\tDescription: {val.Description},\tGeoloc: {val.Geolocation},\tDate: {val.Date},\tTime: {val.Time}");
 
             }
 
 
-            return Books;
+            return Animals;
         }
         
     }
+    
 }

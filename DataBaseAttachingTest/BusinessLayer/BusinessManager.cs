@@ -15,7 +15,7 @@ namespace DataBaseAttachingTest.BusinessLayer
             // Not for the other methods? I dunno why. Im tired. -C
             DatabaseHelper dbHelper = new DatabaseHelper(); // Create an instance
             DatabaseHelper.InitializeDatabase();
-            DatabaseHelper.AddSampleUsers();
+            //DatabaseHelper.AddSampleUsers();
             DatabaseHelper.AddSampleBooks();
             dbHelper.GetAllBooks();  // Call the method on the instance
 
