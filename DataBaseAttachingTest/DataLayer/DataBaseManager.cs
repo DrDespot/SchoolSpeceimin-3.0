@@ -1,15 +1,18 @@
 ﻿using System.Data.SQLite;
 //using Microsoft.Data.Sqlite;
 using System.IO;
+using System.Numerics;
 using System.Text;
 using System.Xml.Linq;
 using DataBaseAttachingTest.Models;
 
 public class DatabaseHelper
 {
+
+
     // Relative paths to WORKING DIRECTORY [in this case, bin/Debug/net8.0], NOT this C# file.
     // Side Note: Wont Work anymore if this is turned into an .exe
-    private static string dbFullPath = @"..\..\..\Files\LibraryManagementSystem.db";
+    private static string dbFullPath = @"..\..\..\Files\JunkOrganismSystem.db";
 
     // Conveys where DB source is. Very important.
     private static string connectionString = $"Data Source={dbFullPath};Version=3;";
@@ -42,16 +45,18 @@ public class DatabaseHelper
 
                     );";
 
-                /*string createUsersTableQuery = @"
-                    CREATE TABLE IF NOT EXISTS users (
+                string createPlantsTableQuery = @"
+                    CREATE TABLE IF NOT EXISTS plants (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         name TEXT NOT NULL,
-                        age INTEGER NOT NULL,
-                        email TEXT UNIQUE NOT NULL,
-                        password TEXT NOT NULL,
-                        user_type TEXT NOT NULL
+                        origin TEXT NOT NULL,
+                        description TEXT NOT NULL,
+                        latitude TEXT NOT NULL,
+                        longitude TEXT NOT NULL,
+                        date TEXT NOT NULL DEFAULT (CURRENT_DATE),
+                        time TEXT NOT NULL DEFAULT (CURRENT_TIME)
                     );";
-                */
+                
 
                 // Add the defined tables.
                 using (SQLiteCommand command = new SQLiteCommand(connection))
@@ -59,9 +64,9 @@ public class DatabaseHelper
                     command.CommandText = createAnimalsTableQuery;
                     command.ExecuteNonQuery();
 
-                    /*command.CommandText = createUsersTableQuery;
+                    command.CommandText = createPlantsTableQuery;
                     command.ExecuteNonQuery();
-                    */
+                    
                 }
             }
         }
@@ -94,9 +99,9 @@ public class DatabaseHelper
             "Otter",
             };
             string[] animalOrigins= {
-            "Inheems",
-            "Exoot",
-            "Inheems",
+            "Native",
+            "Foreign",
+            "Native",
             };
             string[] animalDescriptions = {
             "Het edelhert (Cervus elaphus) is een evenhoevig zoogdier uit de familie der hertachtigen.",
@@ -144,8 +149,45 @@ public class DatabaseHelper
 
     }
 
-    /*
-    public static void AddSampleUsers()
+
+    public static void AddAnimal(string animalName, string animalOrigin, string animalDescription, string animalLatitude, string animalLongitude)
+    {
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            using (SQLiteCommand command = new SQLiteCommand(connection))
+            {
+                
+                //The @'s are placeholders for the real values.
+                command.CommandText =
+                    @"INSERT INTO animals (name, origin, description, latitude, longitude)
+                VALUES (@name, @origin, @description, @latitude, @longitude);";
+
+                // Imporrtant to safely add parameters this way to avoid 
+                // SQL injections.
+                command.Parameters.AddWithValue("@name", animalName);
+                command.Parameters.AddWithValue("@origin", animalOrigin);
+                command.Parameters.AddWithValue("@description", animalDescription);
+                command.Parameters.AddWithValue("@latitude", animalLatitude);
+                command.Parameters.AddWithValue("@longitude", animalLongitude);
+
+
+                command.ExecuteNonQuery();
+
+                //Cleaning up parameters.
+                command.Parameters.Clear();
+                
+            }
+        }
+
+
+    }
+
+
+    
+    public static void AddSamplePlants()
     {
         // Note: Temp solution. U should check if the value already has been added and then choose to not add it again. 
        
@@ -154,69 +196,61 @@ public class DatabaseHelper
         {
             connection.Open();
 
-            string checkQuery = "SELECT COUNT(*) FROM users;";
+            string checkQuery = "SELECT COUNT(*) FROM plants;";
             using (SQLiteCommand checkCommand = new SQLiteCommand(checkQuery, connection))
             {
                 long count = (long)checkCommand.ExecuteScalar();
                 if (count > 0)
                 {
-                    Console.WriteLine("User data already exists. Skipping sample insertion.");
+                    Console.WriteLine("Plant data already exists. Skipping sample insertion.");
                     return; // Exit the function if data exists
                 }
             }
 
-            string[] userNames = {
-        "Alan Turing",
-        "Linus Torvalds",
-        "Steve Jobs",
-        "Edsger Dijkstra",
-        "Bill Gates"
-        };
-            int[] userAges = {
-        41,
-        55,
-        56,
-        72,
-        69
-        };
-            string[] userEmails = {
-        "alan.turing@example.com",
-        "linus.torvalds@example.com",
-        "steve.jobs@example.com",
-        "edsger.dijkstra@example.com",
-        "bill.gates@example.com"
-        };
-            string[] userPasswords = {
-        "password1",
-        "password2",
-        "password3",
-        "password4",
-        "password5"
-        };
-            string[] userTypes = {
-        "RegularUser",
-        "PremiumUser",
-        "RegularUser",
-        "RegularUser",
-        "PremiumUser"
-        };
+            string[] plantNames = {
+            "Palmtree",
+            "Eikenhoutenkiemplantje",
+            "Mimosa Pudica",
+            };
+            string[] plantOrigins = {
+            "Foreign",
+            "Native",
+            "Foreign",
+            };
+            string[] plantDescriptions = {
+            "De palmenfamilie (Palmae of Arecaceae: beide zijn toegestaan) is de enige familie in de orde Arecales.",
+            "Een kiemplant is een item dat kan worden gegroeid in bomen.",
+            "Mimosa pudica (also called sensitive plant, sleepy plant,[citation needed] action plant, humble plant, touch-me-not, touch-and-die, or shameplant)[3][2] is a creeping annual or perennial flowering plant of the pea/legume family Fabaceae.."
+            };
+            string[] plantLatitudes = {
+            "53.2190652",
+            "50.997843",
+            "51.304945"
+            };
+            string[] plantLongitudes = {
+            "6.5680077",
+            "5.445803",
+            "3.886283"
+            };
 
             using (SQLiteCommand command = new SQLiteCommand(connection))
             {
-                for (int i = 0; i < userNames.Length; i++)
+                for (int i = 0; i < plantNames.Length; i++)
                 {
                     //The @'s are placeholders for the real values.
                     command.CommandText =
-                        @"INSERT INTO users (name, age, email, password, user_type)
-                    VALUES (@name, @age, @email, @password, @user_type);";
+                        @"INSERT INTO plants (name, origin, description, latitude, longitude)
+                    VALUES (@name, @origin, @description, @latitude, @longitude);";
 
                     // Imporrtant to safely add parameters this way to avoid 
                     // SQL injections.
-                    command.Parameters.AddWithValue("@name", userNames[i]);
-                    command.Parameters.AddWithValue("@email", userEmails[i]);
-                    command.Parameters.AddWithValue("@age", userAges[i]);
-                    command.Parameters.AddWithValue("@password", userPasswords[i]);
-                    command.Parameters.AddWithValue("@user_type", userTypes[i]);
+                    command.Parameters.AddWithValue("@name", plantNames[i]);
+                    command.Parameters.AddWithValue("@origin", plantOrigins[i]);
+                    command.Parameters.AddWithValue("@description", plantDescriptions[i]);
+                    command.Parameters.AddWithValue("@latitude", plantLatitudes[i]);
+                    command.Parameters.AddWithValue("@longitude", plantLongitudes[i]);
+
+
                     command.ExecuteNonQuery();
 
                     //Cleaning up parameters for the next iteration of the loop.
@@ -226,11 +260,17 @@ public class DatabaseHelper
         }
         
     }
-    */
-
-
     
-    public List<Animal> GetAllAnimals()
+
+
+    public static void GetAllOrganisms()
+    {
+        GetAllAnimals();
+        GetAllPlants();
+        
+    }
+
+    public static List<Animal> GetAllAnimals()
     {
         /*
         using (StreamWriter sw = new StreamWriter("test.csv"))
@@ -283,10 +323,73 @@ public class DatabaseHelper
 
             }
 
+          
+
 
             return Animals;
         }
         
     }
-    
+
+
+    public static List<Plant> GetAllPlants()
+    {
+        /*
+        using (StreamWriter sw = new StreamWriter("test.csv"))
+        {
+            sw.WriteLine("a,b,c");
+        }
+        */
+
+        var Plants = new List<Plant>();
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            string selectQuery = @"
+            SELECT * FROM plants;";
+            using var command = new SQLiteCommand(selectQuery, connection);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int idValue = reader.GetInt32(0);
+                string id = idValue.ToString();
+
+                string name = reader.GetString(1);
+                string origin = reader.GetString(2);
+                string description = reader.GetString(3);
+                string latitude = reader.GetString(4);
+                string longitude = reader.GetString(5);
+                string date = reader.GetString(6);
+                string time = reader.GetString(7);
+
+                Plants.Add(new Plant
+                (
+                    idValue,
+                    name,
+                    origin,
+                    description,
+                    latitude,
+                    longitude,
+                    date,
+                    time
+                ));
+            }
+
+
+            foreach (var val in Plants)
+            {
+                Console.WriteLine($"ID: {val.Id}\nName: {val.Name}\nOrigin: {val.Origin}\nDescription: {val.Description}\nLatitude: {val.Latitude}\nLongitude: {val.Longitude}\nDate [YYYY-MM-DD]: {val.Date}\nTime [UTC]: {val.Time}\n");
+
+            }
+
+
+            return Plants;
+
+        }
+
+    }
+
 }
