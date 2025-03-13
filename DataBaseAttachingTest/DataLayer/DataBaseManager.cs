@@ -3,7 +3,7 @@
 using System.IO;
 using System.Text;
 using System.Xml.Linq;
-using DataBaseAttachingTest.Models;  
+using DataBaseAttachingTest.Models;
 
 public class DatabaseHelper
 {
@@ -33,10 +33,12 @@ public class DatabaseHelper
                     CREATE TABLE IF NOT EXISTS animals (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         name TEXT NOT NULL,
+                        origin TEXT NOT NULL,
                         description TEXT NOT NULL,
-                        geolocation TEXT NOT NULL,
-                        date TEXT NOT NULL,
-                        time TEXT NOT NULL
+                        latitude TEXT NOT NULL,
+                        longitude TEXT NOT NULL,
+                        date TEXT NOT NULL DEFAULT (CURRENT_DATE),
+                        time TEXT NOT NULL DEFAULT (CURRENT_TIME)
 
                     );";
 
@@ -68,7 +70,7 @@ public class DatabaseHelper
 
 
 
-    public static void AddSampleBooks()
+    public static void AddSampleAnimals()
     {
 
         using (SQLiteConnection connection = new SQLiteConnection(connectionString))
@@ -87,29 +89,29 @@ public class DatabaseHelper
             }
 
             string[] animalNames = {
-            "All My Sons",
-            "Oliver Twist",
-            "Das Parfum",
+            "Edelhert",
+            "Hermelijn",
+            "Otter",
             };
-                string[] animalDescriptions = {
-            "Arthur Miller",
-            "Charles Dickens",
-            "Patrick Süskind"
+            string[] animalOrigins= {
+            "Inheems",
+            "Exoot",
+            "Inheems",
             };
-                string[] animalGeolocations = {
-            "Tragedy",
-            "Roman",
-            "Horror"
+            string[] animalDescriptions = {
+            "Het edelhert (Cervus elaphus) is een evenhoevig zoogdier uit de familie der hertachtigen.",
+            "De hermelijn (Mustela erminea) is een klein zoogdier uit de familie van de marterachtigen (Mustelidae).",
+            "De otters (Lutrinae) vormen een onderfamilie van in het water levende roofdieren uit de familie van de marterachtigen (Mustelidae)."
             };
-            string[] animalDates = {
-            "Tragedy",
-            "Roman",
-            "Horror"
+                string[] animalLatitudes = {
+            "53.2190652",
+            "50.997843",
+            "51.304945"
             };
-            string[] animalTimes = {
-            "Tragedy",
-            "Roman",
-            "Horror"
+            string[] animalLongitudes = {
+            "6.5680077",
+            "5.445803",
+            "3.886283"
             };
 
 
@@ -119,16 +121,17 @@ public class DatabaseHelper
                 {
                     //The @'s are placeholders for the real values.
                     command.CommandText =
-                        @"INSERT INTO animals (name, description, geolocation, date, time)
-                    VALUES (@name, @description, @geolocation, @date, @time);";
+                        @"INSERT INTO animals (name, origin, description, latitude, longitude)
+                    VALUES (@name, @origin, @description, @latitude, @longitude);";
 
                     // Imporrtant to safely add parameters this way to avoid 
                     // SQL injections.
                     command.Parameters.AddWithValue("@name", animalNames[i]);
+                    command.Parameters.AddWithValue("@origin", animalOrigins[i]);
                     command.Parameters.AddWithValue("@description", animalDescriptions[i]);
-                    command.Parameters.AddWithValue("@geolocation", animalGeolocations[i]);
-                    command.Parameters.AddWithValue("@date", animalDates[i]);
-                    command.Parameters.AddWithValue("@time", animalTimes[i]);
+                    command.Parameters.AddWithValue("@latitude", animalLatitudes[i]);
+                    command.Parameters.AddWithValue("@longitude", animalLongitudes[i]);
+                   
 
                     command.ExecuteNonQuery();
 
@@ -227,7 +230,7 @@ public class DatabaseHelper
 
 
     
-    public List<Animal> GetAllBooks()
+    public List<Animal> GetAllAnimals()
     {
         /*
         using (StreamWriter sw = new StreamWriter("test.csv"))
@@ -253,17 +256,21 @@ public class DatabaseHelper
                 string id = idValue.ToString();
 
                 string name = reader.GetString(1);
-                string description = reader.GetString(2);
-                string geolocation = reader.GetString(3);
-                string date = reader.GetString(4);
-                string time = reader.GetString(5);
+                string origin = reader.GetString(2);
+                string description = reader.GetString(3);
+                string latitude = reader.GetString(4);
+                string longitude = reader.GetString(5);
+                string date = reader.GetString(6);
+                string time = reader.GetString(7);
 
                 Animals.Add(new Animal
                 (
                     idValue,
                     name,
+                    origin,
                     description,
-                    geolocation,
+                    latitude,
+                    longitude,
                     date,
                     time
                 ));
@@ -272,7 +279,7 @@ public class DatabaseHelper
 
             foreach (var val in Animals)
             {
-                Console.WriteLine($"ID: {val.Id},\tName: {val.Name},\tDescription: {val.Description},\tGeoloc: {val.Geolocation},\tDate: {val.Date},\tTime: {val.Time}");
+                Console.WriteLine($"ID: {val.Id}\nName: {val.Name}\nOrigin: {val.Origin}\nDescription: {val.Description}\nLatitude: {val.Latitude}\nLongitude: {val.Longitude}\nDate [YYYY-MM-DD]: {val.Date}\nTime [UTC]: {val.Time}\n");
 
             }
 

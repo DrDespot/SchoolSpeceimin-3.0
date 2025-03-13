@@ -16,8 +16,8 @@ namespace DataBaseAttachingTest.BusinessLayer
             DatabaseHelper dbHelper = new DatabaseHelper(); // Create an instance
             DatabaseHelper.InitializeDatabase();
             //DatabaseHelper.AddSampleUsers();
-            DatabaseHelper.AddSampleBooks();
-            dbHelper.GetAllBooks();  // Call the method on the instance
+            DatabaseHelper.AddSampleAnimals();
+            dbHelper.GetAllAnimals();  // Call the method on the instance
 
         }
     }

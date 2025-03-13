@@ -11,17 +11,21 @@ namespace DataBaseAttachingTest.Models
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
+        public string Origin { get; private set; }
         public string Description { get; private set; }
-        public string Geolocation { get; private set; }
+        public string Latitude { get; private set; }
+        public string Longitude { get; private set; }
         public string Date { get; private set; }
         public string Time { get; private set; }
 
-        public Animal(int id, string name, string description, string geolocation, string date, string time)
+        public Animal(int id, string name, string origin, string description, string latitude, string longitude, string date, string time)
         {
             Id = id;
             Name = name;
+            Origin = origin;
             Description = description;
-            Geolocation = geolocation;
+            Latitude = latitude;
+            Longitude = longitude;
             Date = date;
             Time = time;
         }
