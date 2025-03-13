@@ -8,8 +8,6 @@ using DataBaseAttachingTest.Models;
 
 public class DatabaseHelper
 {
-
-
     // Relative paths to WORKING DIRECTORY [in this case, bin/Debug/net8.0], NOT this C# file.
     // Side Note: Wont Work anymore if this is turned into an .exe
     private static string dbFullPath = @"..\..\..\Files\JunkOrganismSystem.db";
@@ -150,42 +148,6 @@ public class DatabaseHelper
     }
 
 
-    public static void AddAnimal(string animalName, string animalOrigin, string animalDescription, string animalLatitude, string animalLongitude)
-    {
-
-        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
-        {
-            connection.Open();
-
-            using (SQLiteCommand command = new SQLiteCommand(connection))
-            {
-                
-                //The @'s are placeholders for the real values.
-                command.CommandText =
-                    @"INSERT INTO animals (name, origin, description, latitude, longitude)
-                VALUES (@name, @origin, @description, @latitude, @longitude);";
-
-                // Imporrtant to safely add parameters this way to avoid 
-                // SQL injections.
-                command.Parameters.AddWithValue("@name", animalName);
-                command.Parameters.AddWithValue("@origin", animalOrigin);
-                command.Parameters.AddWithValue("@description", animalDescription);
-                command.Parameters.AddWithValue("@latitude", animalLatitude);
-                command.Parameters.AddWithValue("@longitude", animalLongitude);
-
-
-                command.ExecuteNonQuery();
-
-                //Cleaning up parameters.
-                command.Parameters.Clear();
-                
-            }
-        }
-
-
-    }
-
-
     
     public static void AddSamplePlants()
     {
@@ -260,7 +222,78 @@ public class DatabaseHelper
         }
         
     }
-    
+
+
+
+    public static void AddAnimal(string animalName, string animalOrigin, string animalDescription, string animalLatitude, string animalLongitude)
+    {
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            using (SQLiteCommand command = new SQLiteCommand(connection))
+            {
+
+                //The @'s are placeholders for the real values.
+                command.CommandText =
+                    @"INSERT INTO animals (name, origin, description, latitude, longitude)
+                VALUES (@name, @origin, @description, @latitude, @longitude);";
+
+                // Imporrtant to safely add parameters this way to avoid 
+                // SQL injections.
+                command.Parameters.AddWithValue("@name", animalName);
+                command.Parameters.AddWithValue("@origin", animalOrigin);
+                command.Parameters.AddWithValue("@description", animalDescription);
+                command.Parameters.AddWithValue("@latitude", animalLatitude);
+                command.Parameters.AddWithValue("@longitude", animalLongitude);
+
+
+                command.ExecuteNonQuery();
+
+                //Cleaning up parameters.
+                command.Parameters.Clear();
+
+            }
+        }
+
+
+    }
+
+    public static void AddPlant(string plantName, string plantOrigin, string plantDescription, string plantLatitude, string plantLongitude)
+    {
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            using (SQLiteCommand command = new SQLiteCommand(connection))
+            {
+
+                //The @'s are placeholders for the real values.
+                command.CommandText =
+                    @"INSERT INTO plants (name, origin, description, latitude, longitude)
+                VALUES (@name, @origin, @description, @latitude, @longitude);";
+
+                // Imporrtant to safely add parameters this way to avoid 
+                // SQL injections.
+                command.Parameters.AddWithValue("@name", plantName);
+                command.Parameters.AddWithValue("@origin", plantOrigin);
+                command.Parameters.AddWithValue("@description", plantDescription);
+                command.Parameters.AddWithValue("@latitude", plantLatitude);
+                command.Parameters.AddWithValue("@longitude", plantLongitude);
+
+
+                command.ExecuteNonQuery();
+
+                //Cleaning up parameters.
+                command.Parameters.Clear();
+
+            }
+        }
+
+
+    }
 
 
     public static void GetAllOrganisms()
@@ -272,12 +305,6 @@ public class DatabaseHelper
 
     public static List<Animal> GetAllAnimals()
     {
-        /*
-        using (StreamWriter sw = new StreamWriter("test.csv"))
-        {
-            sw.WriteLine("a,b,c");
-        }
-        */
 
         var Animals = new List<Animal>();
 
@@ -391,5 +418,40 @@ public class DatabaseHelper
         }
 
     }
+
+    //ONLY ADDS CSV
+    public static void ExportAsCsv()
+    {
+        string csvPath = @"..\..\..\Files\Animals.csv";
+
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            using (SQLiteCommand sqlCmd = new SQLiteCommand("SELECT * FROM animals", connection))
+            using (SQLiteDataReader reader = sqlCmd.ExecuteReader())
+
+
+            using (StreamWriter sw = new StreamWriter(csvPath))
+            {
+                object[] output = new object[reader.FieldCount];
+
+                // Write headers
+                for (int i = 0; i < reader.FieldCount; i++)
+                    output[i] = reader.GetName(i);
+
+                sw.WriteLine(string.Join(",", output));
+
+                // Write data rows
+                while (reader.Read())
+                {
+                    reader.GetValues(output);
+                    sw.WriteLine(string.Join(",", output));
+                }
+            }
+        }
+    }
+
 
 }

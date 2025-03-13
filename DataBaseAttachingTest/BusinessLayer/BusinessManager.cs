@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DataBaseAttachingTest.BusinessLayer
 {
     class BusinessManager
     {
-
-
         public static void Initialize()
         {
             Console.WriteLine("Initializing database..");
@@ -73,14 +72,15 @@ namespace DataBaseAttachingTest.BusinessLayer
                     break;
                 case 6:
                     Console.WriteLine("ADDING ANIMAL");
-                    DatabaseHelper.AddAnimal("Penguin", "Foreign", "Pinguïns of vetganzen zijn een orde van niet-vliegende zeevogels die alleen voorkomen op het zuidelijk halfrond.", "50.86963445", "6.04903023345004");
+                    UserAddingAnimal();
                     break;
                 case 7:
                     Console.WriteLine("ADDING PLANT");
-                    //DatabaseHelper.AddAnimal("Penguin", "Foreign", "Pinguïns of vetganzen zijn een orde van niet-vliegende zeevogels die alleen voorkomen op het zuidelijk halfrond.", "50.86963445", "6.04903023345004");
+                    UserAddingPlant();
                     break;
                 case 8:
                     Console.WriteLine("EXPORTING ORGANISMS AS .csv");
+                    DatabaseHelper.ExportAsCsv();
                     //DatabaseHelper.AddAnimal("Penguin", "Foreign", "Pinguïns of vetganzen zijn een orde van niet-vliegende zeevogels die alleen voorkomen op het zuidelijk halfrond.", "50.86963445", "6.04903023345004");
                     break;
                 case 9:
@@ -93,6 +93,48 @@ namespace DataBaseAttachingTest.BusinessLayer
             }
 
 
+        }
+
+        static void UserAddingAnimal()
+        {
+            Console.Write("Animal Name? ");
+            string inputName = Console.ReadLine();
+
+            Console.Write("Animal Origin? [Native/Foreign] ");
+            string inputOrigin = Console.ReadLine();
+
+            Console.Write("Animal Description? ");
+            string inputDescription = Console.ReadLine();
+
+            Console.Write("Animal Latitude? ");
+            string inputLatitude = Console.ReadLine();
+
+            Console.Write("Animal Latitude? ");
+            string inputLongitude = Console.ReadLine();
+
+            //DatabaseHelper.AddAnimal("Penguin", "Foreign", "Pinguïns of vetganzen zijn een orde van niet-vliegende zeevogels die alleen voorkomen op het zuidelijk halfrond.", "50.86963445", "6.04903023345004");
+            DatabaseHelper.AddAnimal(inputName, inputOrigin, inputDescription, inputLatitude, inputLongitude);
+        }
+
+        static void UserAddingPlant()
+        {
+            Console.Write("Plant Name? ");
+            string inputName = Console.ReadLine();
+
+            Console.Write("Plant Origin? [Native/Foreign] ");
+            string inputOrigin = Console.ReadLine();
+
+            Console.Write("Plant Description? ");
+            string inputDescription = Console.ReadLine();
+
+            Console.Write("Plant Latitude? ");
+            string inputLatitude = Console.ReadLine();
+
+            Console.Write("Plant Latitude? ");
+            string inputLongitude = Console.ReadLine();
+
+            //DatabaseHelper.AddAnimal("Penguin", "Foreign", "Pinguïns of vetganzen zijn een orde van niet-vliegende zeevogels die alleen voorkomen op het zuidelijk halfrond.", "50.86963445", "6.04903023345004");
+            DatabaseHelper.AddPlant(inputName, inputOrigin, inputDescription, inputLatitude, inputLongitude);
         }
 
     }
