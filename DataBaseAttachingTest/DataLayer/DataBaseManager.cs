@@ -355,7 +355,7 @@ public class DatabaseHelper
 
             return Animals;
         }
-        
+
     }
 
 
@@ -419,8 +419,239 @@ public class DatabaseHelper
 
     }
 
+    public static void GetAllNatives()
+    {
+        GetAllAnimalNatives();
+        GetAllPlantNatives();
+
+    }
+
+    public static void GetAllForeigns()
+    {
+        GetAllAnimalForeigns();
+        GetAllPlantForeigns();
+    }
+
+
+
+    public static List<Animal> GetAllAnimalNatives()
+    {
+
+        var Animals = new List<Animal>();
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            string selectQuery = @"
+            SELECT * FROM animals
+            WHERE origin LIKE 'Native';";
+            using var command = new SQLiteCommand(selectQuery, connection);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int idValue = reader.GetInt32(0);
+                string id = idValue.ToString();
+
+                string name = reader.GetString(1);
+                string origin = reader.GetString(2);
+                string description = reader.GetString(3);
+                string latitude = reader.GetString(4);
+                string longitude = reader.GetString(5);
+                string date = reader.GetString(6);
+                string time = reader.GetString(7);
+
+                Animals.Add(new Animal
+                (
+                    idValue,
+                    name,
+                    origin,
+                    description,
+                    latitude,
+                    longitude,
+                    date,
+                    time
+                ));
+            }
+
+
+            foreach (var val in Animals)
+            {
+                Console.WriteLine($"ID: {val.Id}\nName: {val.Name}\nOrigin: {val.Origin}\nDescription: {val.Description}\nLatitude: {val.Latitude}\nLongitude: {val.Longitude}\nDate [YYYY-MM-DD]: {val.Date}\nTime [UTC]: {val.Time}\n");
+
+            }
+
+            return Animals;
+        }
+
+    }
+
+
+
+    public static List<Plant> GetAllPlantNatives()
+    {
+
+        var Plants = new List<Plant>();
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            string selectQuery = @"
+            SELECT * FROM plants
+            WHERE origin LIKE 'Native';";
+            using var command = new SQLiteCommand(selectQuery, connection);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int idValue = reader.GetInt32(0);
+                string id = idValue.ToString();
+
+                string name = reader.GetString(1);
+                string origin = reader.GetString(2);
+                string description = reader.GetString(3);
+                string latitude = reader.GetString(4);
+                string longitude = reader.GetString(5);
+                string date = reader.GetString(6);
+                string time = reader.GetString(7);
+
+                Plants.Add(new Plant
+                (
+                    idValue,
+                    name,
+                    origin,
+                    description,
+                    latitude,
+                    longitude,
+                    date,
+                    time
+                ));
+            }
+
+
+            foreach (var val in Plants)
+            {
+                Console.WriteLine($"ID: {val.Id}\nName: {val.Name}\nOrigin: {val.Origin}\nDescription: {val.Description}\nLatitude: {val.Latitude}\nLongitude: {val.Longitude}\nDate [YYYY-MM-DD]: {val.Date}\nTime [UTC]: {val.Time}\n");
+
+            }
+
+            return Plants;
+        }
+
+    }
+
+    public static List<Animal> GetAllAnimalForeigns()
+    {
+
+        var Animals = new List<Animal>();
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            string selectQuery = @"
+            SELECT * FROM animals
+            WHERE origin LIKE 'Foreign';";
+            using var command = new SQLiteCommand(selectQuery, connection);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int idValue = reader.GetInt32(0);
+                string id = idValue.ToString();
+
+                string name = reader.GetString(1);
+                string origin = reader.GetString(2);
+                string description = reader.GetString(3);
+                string latitude = reader.GetString(4);
+                string longitude = reader.GetString(5);
+                string date = reader.GetString(6);
+                string time = reader.GetString(7);
+
+                Animals.Add(new Animal
+                (
+                    idValue,
+                    name,
+                    origin,
+                    description,
+                    latitude,
+                    longitude,
+                    date,
+                    time
+                ));
+            }
+
+
+            foreach (var val in Animals)
+            {
+                Console.WriteLine($"ID: {val.Id}\nName: {val.Name}\nOrigin: {val.Origin}\nDescription: {val.Description}\nLatitude: {val.Latitude}\nLongitude: {val.Longitude}\nDate [YYYY-MM-DD]: {val.Date}\nTime [UTC]: {val.Time}\n");
+
+            }
+
+            return Animals;
+        }
+
+    }
+
+
+
+    public static List<Plant> GetAllPlantForeigns()
+    {
+
+        var Plants = new List<Plant>();
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            string selectQuery = @"
+            SELECT * FROM plants
+            WHERE origin LIKE 'Foreign';";
+            using var command = new SQLiteCommand(selectQuery, connection);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int idValue = reader.GetInt32(0);
+                string id = idValue.ToString();
+
+                string name = reader.GetString(1);
+                string origin = reader.GetString(2);
+                string description = reader.GetString(3);
+                string latitude = reader.GetString(4);
+                string longitude = reader.GetString(5);
+                string date = reader.GetString(6);
+                string time = reader.GetString(7);
+
+                Plants.Add(new Plant
+                (
+                    idValue,
+                    name,
+                    origin,
+                    description,
+                    latitude,
+                    longitude,
+                    date,
+                    time
+                ));
+            }
+
+
+            foreach (var val in Plants)
+            {
+                Console.WriteLine($"ID: {val.Id}\nName: {val.Name}\nOrigin: {val.Origin}\nDescription: {val.Description}\nLatitude: {val.Latitude}\nLongitude: {val.Longitude}\nDate [YYYY-MM-DD]: {val.Date}\nTime [UTC]: {val.Time}\n");
+
+            }
+
+            return Plants;
+        }
+
+    }
+
     //ONLY ADDS CSV
-    public static void ExportAsCsv()
+    public static void ExportAnimalsAsCsv()
     {
         string csvPath = @"..\..\..\Files\Animals.csv";
 
@@ -451,7 +682,41 @@ public class DatabaseHelper
                 }
             }
         }
+        Console.WriteLine("Succesfully exported Animals.csv!");
     }
 
+    public static void ExportPlantsAsCsv()
+    {
+        string csvPath = @"..\..\..\Files\Plants.csv";
+
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            using (SQLiteCommand sqlCmd = new SQLiteCommand("SELECT * FROM plants", connection))
+            using (SQLiteDataReader reader = sqlCmd.ExecuteReader())
+
+
+            using (StreamWriter sw = new StreamWriter(csvPath))
+            {
+                object[] output = new object[reader.FieldCount];
+
+                // Write headers
+                for (int i = 0; i < reader.FieldCount; i++)
+                    output[i] = reader.GetName(i);
+
+                sw.WriteLine(string.Join(",", output));
+
+                // Write data rows
+                while (reader.Read())
+                {
+                    reader.GetValues(output);
+                    sw.WriteLine(string.Join(",", output));
+                }
+            }
+        }
+        Console.WriteLine("Succesfully exported Plants.csv!");
+    }
 
 }

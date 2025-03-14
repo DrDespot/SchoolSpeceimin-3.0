@@ -49,16 +49,21 @@ namespace DataBaseAttachingTest.BusinessLayer
 
         static void MainMenuScreen()
         {
-            Console.WriteLine("What would you like to do?" +
-                "\n1. View all Organisms" +
-                "\n2. View all Animals" +
-                "\n3. View all Plants" +
-                "\n4. View all Native Organisms" +
-                "\n5. View all Foreign Organisms" +
-                "\n6. Add Animal" +
-                "\n7. Add Plant" +
-                "\n8. Export all Organisms as .csv" +
-                "\n9. Exit program");
+            Console.WriteLine("\n1. View all Organisms" +
+            "\n2. View all Animals" +
+            "\n3. View all Plants" +
+            "\n4. View all Native Organisms" +
+            "\n5. View all Foreign Organisms" +
+            "\n6. View all Native Animals" +
+            "\n7. View all Native Plants" +
+            "\n8. View all Foreign Animals" +
+            "\n9. View all Foreign Plants" +
+            "\n10. Add Animal" +
+            "\n11. Add Plant" +
+            "\n12. Export Animals as .csv" +
+            "\n13. Export Plants as .csv" +
+            "\n14. Exit program");
+
         }
 
     }

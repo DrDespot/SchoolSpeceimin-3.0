@@ -38,7 +38,7 @@ namespace DataBaseAttachingTest.BusinessLayer
             {
                 string input = Console.ReadLine();
 
-                if (int.TryParse(input, out result) && result <= 9)
+                if (int.TryParse(input, out result) && result <= 14)
                 {
                     validInput = true;
                 }
@@ -48,6 +48,10 @@ namespace DataBaseAttachingTest.BusinessLayer
                 }
             }
 
+            Console.WriteLine("\n");
+
+     
+
             switch (result)
             {
                 case 1:
@@ -55,7 +59,7 @@ namespace DataBaseAttachingTest.BusinessLayer
                     DatabaseHelper.GetAllOrganisms();
                     break;
                 case 2:
-                    Console.WriteLine("VIEWING ALL ORGANISMS");
+                    Console.WriteLine("VIEWING ALL ANIMALS");
                     DatabaseHelper.GetAllAnimals();
                     break;
                 case 3:
@@ -64,28 +68,46 @@ namespace DataBaseAttachingTest.BusinessLayer
                     break;
                 case 4:
                     Console.WriteLine("VIEWING ALL NATIVE ORGANISMS");
-                    //DatabaseHelper.GetAllNatives();
+                    DatabaseHelper.GetAllNatives();
                     break;
                 case 5:
                     Console.WriteLine("VIEWING ALL FOREIGN ORGANISMS");
-                    //DatabaseHelper.GetAllForeign();
+                    DatabaseHelper.GetAllForeigns();
                     break;
                 case 6:
+                    Console.WriteLine("VIEWING ALL NATIVE ANIMALS");
+                    DatabaseHelper.GetAllAnimalNatives();
+                    break;
+                case 7:
+                    Console.WriteLine("VIEWING ALL NATIVE PLANTS");
+                    DatabaseHelper.GetAllPlantNatives();
+                    break;
+                case 8:
+                    Console.WriteLine("VIEWING ALL FOREIGN ANIMALS");
+                    DatabaseHelper.GetAllAnimalForeigns();
+                    break;
+                case 9:
+                    Console.WriteLine("VIEWING ALL FOREIGN PLANTS");
+                    DatabaseHelper.GetAllPlantForeigns();
+                    break;
+                case 10:
                     Console.WriteLine("ADDING ANIMAL");
                     UserAddingAnimal();
                     break;
-                case 7:
+                case 11:
                     Console.WriteLine("ADDING PLANT");
                     UserAddingPlant();
                     break;
-                case 8:
-                    Console.WriteLine("EXPORTING ORGANISMS AS .csv");
-                    DatabaseHelper.ExportAsCsv();
-                    //DatabaseHelper.AddAnimal("Penguin", "Foreign", "Pinguïns of vetganzen zijn een orde van niet-vliegende zeevogels die alleen voorkomen op het zuidelijk halfrond.", "50.86963445", "6.04903023345004");
+                case 12:
+                    Console.WriteLine("EXPORTING ANIMALS AS .csv");
+                    DatabaseHelper.ExportAnimalsAsCsv();
                     break;
-                case 9:
-                    Console.WriteLine("EXITING PROGRAM");
-                    //DatabaseHelper.AddAnimal("Penguin", "Foreign", "Pinguïns of vetganzen zijn een orde van niet-vliegende zeevogels die alleen voorkomen op het zuidelijk halfrond.", "50.86963445", "6.04903023345004");
+                case 13:
+                    Console.WriteLine("EXPORTING PLANTS AS .csv");
+                    DatabaseHelper.ExportPlantsAsCsv();
+                    break;
+                case 14:
+                    ExitPrgm();
                     break;
                 default:
                     Console.WriteLine("How did you get here?!");
@@ -130,12 +152,34 @@ namespace DataBaseAttachingTest.BusinessLayer
             Console.Write("Plant Latitude? ");
             string inputLatitude = Console.ReadLine();
 
-            Console.Write("Plant Latitude? ");
+            Console.Write("Plant Longitude? ");
             string inputLongitude = Console.ReadLine();
 
             //DatabaseHelper.AddAnimal("Penguin", "Foreign", "Pinguïns of vetganzen zijn een orde van niet-vliegende zeevogels die alleen voorkomen op het zuidelijk halfrond.", "50.86963445", "6.04903023345004");
             DatabaseHelper.AddPlant(inputName, inputOrigin, inputDescription, inputLatitude, inputLongitude);
         }
+
+
+
+        static void ExitPrgm()
+        {
+            //Hehe
+            Console.WriteLine("\nAre you sure you want to exit this program? Charlie will miss you\n" +
+                "1. Yes\n" +
+                "2. [or other] No\n");
+
+            int result = 0;
+            string input = Console.ReadLine();
+            int.TryParse(input, out result);
+
+            if (int.TryParse(input, out result) && result == 1)
+            {
+                Console.WriteLine("EXITING PROGRAM");
+                Environment.Exit(0);
+            }
+
+        }
+
 
     }
 
