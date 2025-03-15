@@ -166,7 +166,7 @@ namespace DataBaseAttachingTest.BusinessLayer
             //Hehe
             Console.WriteLine("\nAre you sure you want to exit this program? Charlie will miss you\n" +
                 "1. Yes\n" +
-                "2. [or other] No\n");
+                "2. [or other number] No\n");
 
             int result = 0;
             string input = Console.ReadLine();

@@ -9,8 +9,13 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace DataBaseAttachingTest.BusinessLayer
 {
+
+
     static class Program
     {
+        static int MajorVersion = 2;
+        static int MinorVersion = 16;
+        static int BugFixes = 4;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -18,7 +23,7 @@ namespace DataBaseAttachingTest.BusinessLayer
         static void Main()
         {
             BusinessManager.Initialize();
-            SplashScreen();
+            SplashScreen(MajorVersion, MinorVersion, BugFixes);
             while (true)
             {
                 MainMenu();
@@ -37,9 +42,10 @@ namespace DataBaseAttachingTest.BusinessLayer
 
         }
 
-        static void SplashScreen()
+        static void SplashScreen(int MajorVersion, int MinorVersion, int BugFixes)
         {
             Console.WriteLine("┌───────────────────────────────────────┐\r\n│WELCOME TO THE ANIMATES ORGANISM EDITOR│\r\n└───────────────────────────────────────┘");
+            Console.WriteLine($"Version: {MajorVersion}.{MinorVersion}.{BugFixes}");
         }
         static void MainMenu()
         {
