@@ -15,7 +15,7 @@ namespace DataBaseAttachingTest.BusinessLayer
     {
         static int MajorVersion = 2;
         static int MinorVersion = 17;
-        static int BugFixes = 1;
+        static int BugFixes = 2;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

@@ -366,6 +366,12 @@ public class DatabaseHelper
 
     public static void GetAllOrganisms()
     {
+        // Get the absolute path from the relative path
+        string absolutePath = Path.GetFullPath(dbFullPath);
+
+        // Print the absolute path
+        Console.WriteLine("Absolute path: " + absolutePath);
+
         GetAllAnimals();
         GetAllPlants();
         
