@@ -14,7 +14,7 @@ namespace DataBaseAttachingTest.BusinessLayer
     static class Program
     {
         static int MajorVersion = 2;
-        static int MinorVersion = 16;
+        static int MinorVersion = 17;
         static int BugFixes = 4;
         /// <summary>
         /// The main entry point for the application.
@@ -68,7 +68,10 @@ namespace DataBaseAttachingTest.BusinessLayer
             "\n11. Add Plant" +
             "\n12. Export Animals as .csv" +
             "\n13. Export Plants as .csv" +
-            "\n14. Exit program");
+            "\n14. Copy Animal data to Real Database" +
+            "\n15. Copy Plant data to Real Database" +
+            "\n16. Print all entries from real Database" +
+            "\n17. Exit program");
 
         }
 

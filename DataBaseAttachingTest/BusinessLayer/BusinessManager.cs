@@ -17,6 +17,7 @@ namespace DataBaseAttachingTest.BusinessLayer
 
             //DatabaseHelper dbHelper = new DatabaseHelper(); // Create an instance
             DatabaseHelper.InitializeDatabase();
+            DatabaseHelper.InitializeRealDatabase();
             DatabaseHelper.AddSampleAnimals();
             DatabaseHelper.AddSamplePlants();
             
@@ -38,7 +39,7 @@ namespace DataBaseAttachingTest.BusinessLayer
             {
                 string input = Console.ReadLine();
 
-                if (int.TryParse(input, out result) && result <= 14)
+                if (int.TryParse(input, out result) && result <= 16)
                 {
                     validInput = true;
                 }
@@ -107,6 +108,18 @@ namespace DataBaseAttachingTest.BusinessLayer
                     DatabaseHelper.ExportPlantsAsCsv();
                     break;
                 case 14:
+                    Console.WriteLine("COPYING ANIMAL DATA FROM JUNK DATABASE TO REAL DATABASE");
+                    UserCopyingAnimal();
+                    break;
+                case 15:
+                    Console.WriteLine("COPYING PLANT DATA FROM JUNK DATABASE TO REAL DATABASE");
+                    UserCopyingPlant();
+                    break;
+                case 16:
+                    Console.WriteLine("VIEWING ALL ENTRIES IN REAL DATABASE");
+                    DatabaseHelper.GetAllRealOrganisms();
+                    break;
+                case 17:
                     ExitPrgm();
                     break;
                 default:
@@ -157,6 +170,51 @@ namespace DataBaseAttachingTest.BusinessLayer
 
             //DatabaseHelper.AddAnimal("Penguin", "Foreign", "Pinguïns of vetganzen zijn een orde van niet-vliegende zeevogels die alleen voorkomen op het zuidelijk halfrond.", "50.86963445", "6.04903023345004");
             DatabaseHelper.AddPlant(inputName, inputOrigin, inputDescription, inputLatitude, inputLongitude);
+        }
+
+
+        static void UserCopyingAnimal()
+        {
+            int junkID;
+
+            while (true)
+            {
+                Console.Write("Which Animal ID do you want to copy to the real database? ");
+                string userInput = Console.ReadLine();
+
+                if (int.TryParse(userInput, out junkID))
+                {
+                    DatabaseHelper.CopyJunkAnimalToReal(junkID);
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                }
+            }
+
+        }
+
+        static void UserCopyingPlant()
+        {
+            int junkID;
+
+            while (true)
+            {
+                Console.Write("Which Plant ID do you want to copy to the real database? ");
+                string userInput = Console.ReadLine();
+
+                if (int.TryParse(userInput, out junkID))
+                {
+                    DatabaseHelper.CopyJunkPlantToReal(junkID);
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                }
+            }
+
         }
 
 

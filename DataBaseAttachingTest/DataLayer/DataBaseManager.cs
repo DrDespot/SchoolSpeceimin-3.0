@@ -11,9 +11,11 @@ public class DatabaseHelper
     // Relative paths to WORKING DIRECTORY [in this case, bin/Debug/net8.0], NOT this C# file.
     // Side Note: Wont Work anymore if this is turned into an .exe
     private static string dbFullPath = @"..\..\..\Files\JunkOrganismSystem.db";
+    private static string RealdbFullPath = @"..\..\..\Files\RealOrganismSystem.db";
 
     // Conveys where DB source is. Very important.
     private static string connectionString = $"Data Source={dbFullPath};Version=3;";
+    private static string connectionStringReal = $"Data Source={RealdbFullPath};Version=3;";
 
     // Note you still have to add the DB via Tools>SQLite/ SQL Server Compact Box.
     public static void InitializeDatabase()
@@ -70,6 +72,63 @@ public class DatabaseHelper
         }
 
     }
+
+
+    public static void InitializeRealDatabase()
+    {
+        if (!File.Exists(RealdbFullPath))
+        {
+            SQLiteConnection.CreateFile(RealdbFullPath);
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionStringReal))
+            {
+                connection.Open();
+
+
+                // Common Cmds: Queries[read], Update[Change row[] of data], Insert [Add new row of data] 
+
+                // Define tables for your data
+                string createAnimalsTableQuery = @"
+                    CREATE TABLE IF NOT EXISTS animals (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        name TEXT NOT NULL,
+                        origin TEXT NOT NULL,
+                        description TEXT NOT NULL,
+                        latitude TEXT NOT NULL,
+                        longitude TEXT NOT NULL,
+                        date TEXT NOT NULL DEFAULT (CURRENT_DATE),
+                        time TEXT NOT NULL DEFAULT (CURRENT_TIME)
+
+                    );";
+
+                string createPlantsTableQuery = @"
+                    CREATE TABLE IF NOT EXISTS plants (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        name TEXT NOT NULL,
+                        origin TEXT NOT NULL,
+                        description TEXT NOT NULL,
+                        latitude TEXT NOT NULL,
+                        longitude TEXT NOT NULL,
+                        date TEXT NOT NULL DEFAULT (CURRENT_DATE),
+                        time TEXT NOT NULL DEFAULT (CURRENT_TIME)
+                    );";
+
+
+                // Add the defined tables.
+                using (SQLiteCommand command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = createAnimalsTableQuery;
+                    command.ExecuteNonQuery();
+
+                    command.CommandText = createPlantsTableQuery;
+                    command.ExecuteNonQuery();
+
+                }
+            }
+        }
+
+    }
+
 
 
     public static void AddSampleAnimals()
@@ -727,5 +786,238 @@ public class DatabaseHelper
         }
         Console.WriteLine("Succesfully exported Plants.csv!");
     }
+
+
+    public static void CopyJunkAnimalToReal(int junkID)
+    {
+
+        string sourceDbPath = connectionString;
+        string destinationDbPath = connectionStringReal;
+
+        using (SQLiteConnection sourceConnection = new SQLiteConnection(sourceDbPath))
+        using (SQLiteConnection destinationConnection = new SQLiteConnection(destinationDbPath))
+        {
+            sourceConnection.Open();
+            destinationConnection.Open();
+
+            string selectQuery = "SELECT * FROM animals WHERE id = @id;";
+
+            using (SQLiteCommand selectCmd = new SQLiteCommand(selectQuery, sourceConnection))
+            {
+                selectCmd.Parameters.AddWithValue("@id", junkID);
+
+                using (SQLiteDataReader reader = selectCmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string name = reader.GetString(reader.GetOrdinal("name"));
+                        string origin = reader.GetString(reader.GetOrdinal("origin"));
+                        string description = reader.GetString(reader.GetOrdinal("description"));
+                        string latitude = reader.GetString(reader.GetOrdinal("latitude"));
+                        string longitude = reader.GetString(reader.GetOrdinal("longitude"));
+                        string date = reader.GetString(reader.GetOrdinal("date"));
+                        string time = reader.GetString(reader.GetOrdinal("time"));
+
+                        string insertQuery = @"
+                        INSERT INTO animals (name, origin, description, latitude, longitude, date, time) 
+                        VALUES (@name, @origin, @description, @latitude, @longitude, @date, @time)";
+
+                        using (SQLiteCommand insertCmd = new SQLiteCommand(insertQuery, destinationConnection))
+                        {
+                            insertCmd.Parameters.AddWithValue("@name", name);
+                            insertCmd.Parameters.AddWithValue("@origin", origin);
+                            insertCmd.Parameters.AddWithValue("@description", description);
+                            insertCmd.Parameters.AddWithValue("@latitude", latitude);
+                            insertCmd.Parameters.AddWithValue("@longitude", longitude);
+                            insertCmd.Parameters.AddWithValue("@date", date);
+                            insertCmd.Parameters.AddWithValue("@time", time);
+
+                            insertCmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+        }
+        Console.WriteLine("Copied Animal from junk DB to real DB.");
+    }
+
+    public static void CopyJunkPlantToReal(int junkID)
+    {
+        string sourceDbPath = connectionString;
+        string destinationDbPath = connectionStringReal;
+
+        using (SQLiteConnection sourceConnection = new SQLiteConnection(sourceDbPath))
+        using (SQLiteConnection destinationConnection = new SQLiteConnection(destinationDbPath))
+        {
+            sourceConnection.Open();
+            destinationConnection.Open();
+
+            string selectQuery = "SELECT * FROM plants WHERE id = @id;";
+
+            using (SQLiteCommand selectCmd = new SQLiteCommand(selectQuery, sourceConnection))
+            {
+                // Add parameter for selecting by ID
+                selectCmd.Parameters.AddWithValue("@id", junkID);
+
+                using (SQLiteDataReader reader = selectCmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string name = reader.GetString(reader.GetOrdinal("name"));
+                        string origin = reader.GetString(reader.GetOrdinal("origin"));
+                        string description = reader.GetString(reader.GetOrdinal("description"));
+                        string latitude = reader.GetString(reader.GetOrdinal("latitude"));
+                        string longitude = reader.GetString(reader.GetOrdinal("longitude"));
+                        string date = reader.GetString(reader.GetOrdinal("date"));
+                        string time = reader.GetString(reader.GetOrdinal("time"));
+
+                        string insertQuery = @"
+                        INSERT INTO plants (name, origin, description, latitude, longitude, date, time) 
+                        VALUES (@name, @origin, @description, @latitude, @longitude, @date, @time)";
+
+                        using (SQLiteCommand insertCmd = new SQLiteCommand(insertQuery, destinationConnection))
+                        {
+                            insertCmd.Parameters.AddWithValue("@name", name);
+                            insertCmd.Parameters.AddWithValue("@origin", origin);
+                            insertCmd.Parameters.AddWithValue("@description", description);
+                            insertCmd.Parameters.AddWithValue("@latitude", latitude);
+                            insertCmd.Parameters.AddWithValue("@longitude", longitude);
+                            insertCmd.Parameters.AddWithValue("@date", date);
+                            insertCmd.Parameters.AddWithValue("@time", time);
+
+                            insertCmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+        }
+        Console.WriteLine("Copied plant from junk DB to real DB.");
+    }
+
+
+    public static void GetAllRealOrganisms()
+    {
+        GetAllRealAnimals();
+        GetAllRealPlants();
+
+    }
+
+    public static List<Animal> GetAllRealAnimals()
+    {
+
+        var Animals = new List<Animal>();
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionStringReal))
+        {
+            connection.Open();
+
+            string selectQuery = @"
+            SELECT * FROM animals;";
+            using var command = new SQLiteCommand(selectQuery, connection);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int idValue = reader.GetInt32(0);
+                string id = idValue.ToString();
+
+                string name = reader.GetString(1);
+                string origin = reader.GetString(2);
+                string description = reader.GetString(3);
+                string latitude = reader.GetString(4);
+                string longitude = reader.GetString(5);
+                string date = reader.GetString(6);
+                string time = reader.GetString(7);
+
+                Animals.Add(new Animal
+                (
+                    idValue,
+                    name,
+                    origin,
+                    description,
+                    latitude,
+                    longitude,
+                    date,
+                    time
+                ));
+            }
+
+
+            foreach (var val in Animals)
+            {
+                Console.WriteLine($"ID: {val.Id}\nName: {val.Name}\nOrigin: {val.Origin}\nDescription: {val.Description}\nLatitude: {val.Latitude}\nLongitude: {val.Longitude}\nDate [YYYY-MM-DD]: {val.Date}\nTime [UTC]: {val.Time}\n");
+
+            }
+
+
+
+
+            return Animals;
+        }
+
+    }
+
+
+    public static List<Plant> GetAllRealPlants()
+    {
+        /*
+        using (StreamWriter sw = new StreamWriter("test.csv"))
+        {
+            sw.WriteLine("a,b,c");
+        }
+        */
+
+        var Plants = new List<Plant>();
+
+        using (SQLiteConnection connection = new SQLiteConnection(connectionStringReal))
+        {
+            connection.Open();
+
+            string selectQuery = @"
+            SELECT * FROM plants;";
+            using var command = new SQLiteCommand(selectQuery, connection);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int idValue = reader.GetInt32(0);
+                string id = idValue.ToString();
+
+                string name = reader.GetString(1);
+                string origin = reader.GetString(2);
+                string description = reader.GetString(3);
+                string latitude = reader.GetString(4);
+                string longitude = reader.GetString(5);
+                string date = reader.GetString(6);
+                string time = reader.GetString(7);
+
+                Plants.Add(new Plant
+                (
+                    idValue,
+                    name,
+                    origin,
+                    description,
+                    latitude,
+                    longitude,
+                    date,
+                    time
+                ));
+            }
+
+
+            foreach (var val in Plants)
+            {
+                Console.WriteLine($"ID: {val.Id}\nName: {val.Name}\nOrigin: {val.Origin}\nDescription: {val.Description}\nLatitude: {val.Latitude}\nLongitude: {val.Longitude}\nDate [YYYY-MM-DD]: {val.Date}\nTime [UTC]: {val.Time}\n");
+
+            }
+
+
+            return Plants;
+
+        }
+
+    }
+
+
 
 }
