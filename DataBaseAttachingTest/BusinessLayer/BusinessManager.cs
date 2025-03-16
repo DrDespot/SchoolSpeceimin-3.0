@@ -39,7 +39,7 @@ namespace DataBaseAttachingTest.BusinessLayer
             {
                 string input = Console.ReadLine();
 
-                if (int.TryParse(input, out result) && result <= 16)
+                if (int.TryParse(input, out result) && result <= 17)
                 {
                     validInput = true;
                 }
