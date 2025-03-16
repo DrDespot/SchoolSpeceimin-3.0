@@ -7,17 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataBaseAttachingTest.Models
 {
-    public class Plant
+    public class Plant : Organism
     {
-        public int Id { get; private set; }
-        public string Name { get; private set; }
-        public string Origin { get; private set; }
-        public string Description { get; private set; }
-        public string Latitude { get; private set; }
-        public string Longitude { get; private set; }
-        public string Date { get; private set; }
-        public string Time { get; private set; }
-
         public Plant(int id, string name, string origin, string description, string latitude, string longitude, string date, string time)
         {
             Id = id;
@@ -29,6 +20,5 @@ namespace DataBaseAttachingTest.Models
             Date = date;
             Time = time;
         }
-
     }
 }

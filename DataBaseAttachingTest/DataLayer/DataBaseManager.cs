@@ -72,7 +72,6 @@ public class DatabaseHelper
     }
 
 
-
     public static void AddSampleAnimals()
     {
 
@@ -95,26 +94,36 @@ public class DatabaseHelper
             "Edelhert",
             "Hermelijn",
             "Otter",
+            "Vliegende flapdrol",
+            "Kamhagedis"
             };
             string[] animalOrigins= {
             "Native",
             "Foreign",
             "Native",
+            "Foreign",
+            "Native"
             };
             string[] animalDescriptions = {
             "Het edelhert (Cervus elaphus) is een evenhoevig zoogdier uit de familie der hertachtigen.",
             "De hermelijn (Mustela erminea) is een klein zoogdier uit de familie van de marterachtigen (Mustelidae).",
-            "De otters (Lutrinae) vormen een onderfamilie van in het water levende roofdieren uit de familie van de marterachtigen (Mustelidae)."
+            "De otters (Lutrinae) vormen een onderfamilie van in het water levende roofdieren uit de familie van de marterachtigen (Mustelidae).",
+            "De vliegende flapdrol[1] (Draco) zijn een geslacht van hagedissen die behoren tot de agamen (Agamidae). ",
+            "Hagedis met zieke hanekam"
             };
                 string[] animalLatitudes = {
             "53.2190652",
             "50.997843",
-            "51.304945"
+            "51.304945",
+            "53.342908",
+            "52.089428"
             };
             string[] animalLongitudes = {
             "6.5680077",
             "5.445803",
-            "3.886283"
+            "3.886283",
+            "3.038247",
+            "3.4928466"
             };
 
 
