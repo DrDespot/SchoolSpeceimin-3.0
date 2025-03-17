@@ -9,8 +9,10 @@ using DataBaseAttachingTest.Models;
 public class DatabaseHelper
 {
     // Relative paths to WORKING DIRECTORY [in this case, bin/Debug/net8.0], NOT this C# file.
+    // Yes I know calling it full path sounds like its an absolute path.
     // Side Note: Wont Work anymore if this is turned into an .exe
     private static string dbFullPath = @"..\..\..\Files\JunkOrganismSystem.db";
+
     private static string RealdbFullPath = @"..\..\..\Files\RealOrganismSystem.db";
 
     // Conveys where DB source is. Very important.
@@ -83,7 +85,6 @@ public class DatabaseHelper
             using (SQLiteConnection connection = new SQLiteConnection(connectionStringReal))
             {
                 connection.Open();
-
 
                 // Common Cmds: Queries[read], Update[Change row[] of data], Insert [Add new row of data] 
 
