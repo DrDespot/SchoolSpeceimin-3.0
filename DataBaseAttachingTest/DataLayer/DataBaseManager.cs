@@ -8,12 +8,12 @@ using DataBaseAttachingTest.Models;
 
 public class DatabaseHelper
 {
-    // Relative paths to WORKING DIRECTORY [in this case, bin/Debug/net8.0], NOT this C# file.
+    // Relative paths to     NOT this C# file.
     // Yes I know calling it full path sounds like its an absolute path.
     // Side Note: Wont Work anymore if this is turned into an .exe
-    private static string dbFullPath = @"..\..\..\Files\JunkOrganismSystem.db";
+    private static string dbFullPath = @$"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}Files{Path.DirectorySeparatorChar}JunkOrganismSystem.db";
 
-    private static string RealdbFullPath = @"..\..\..\Files\RealOrganismSystem.db";
+    private static string RealdbFullPath = @$"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}Files{Path.DirectorySeparatorChar}RealOrganismSystem.db";
 
     // Conveys where DB source is. Very important.
     private static string connectionString = $"Data Source={dbFullPath};Version=3;";
